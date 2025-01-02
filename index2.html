@@ -1,0 +1,249 @@
+
+<?php
+// Data racks yang didefinisikan
+$racks = [
+    'rack_regular' => ['A', 'B', 'C', 'D', 'E'],
+    'rack_medicene' => ['aaa', 'bbb', 'ccc', 'ddd'],
+    'rack_electronic' => ['aaaa', 'bbbb', 'cccc', 'dddd']
+];
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        section {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        .rack-info {
+            margin-top: 15px;
+        }
+
+        .rack-item {
+            margin: 5px 0;
+            color: blue;
+        }
+
+        .rack-item:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Warehouse Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showSection('supply')">Supply</a></li>
+                <li><a href="#" onclick="showSection('rack')">Rack</a></li>
+                <li><a href="#" onclick="showSection('runwave')">Run Wave</a></li>
+                <li><a href="#" onclick="showSection('inventory')">Inventory</a></li>
+                <li><a href="#" onclick="showSection('picker')">Picker</a></li>
+                <li><a href="#" onclick="showSection('loader')">Loader</a></li>
+                <li><a href="#" onclick="showSection('receiver')">Receiver</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Supply Section -->
+        <section id="supply" class="active">
+            <h2>Supply Barang Masuk</h2>
+            <form>
+                <label for="supplier">Supplier:</label>
+                <input type="text" id="supplier" name="supplier" placeholder="Nama Supplier">
+                <label for="item">Item:</label>
+                <input type="text" id="item" name="item" placeholder="Nama Item">
+                <label for="rack">Rack:</label>
+                <select id="rack" name="rack">
+                    <option value="rack_regular">Rack Regular</option>
+                    <option value="rack_medicene">Rack Medicine</option>
+                    <option value="rack_electronic">Rack Electronic</option>
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <!-- Rack Section -->
+        <section id="rack">
+            <h2>Informasi Rack</h2>
+            <?php
+            // Menampilkan informasi rack
+            foreach ($racks as $rackType => $items) {
+                // Mengubah nama rack menjadi format yang lebih mudah dibaca
+                $formattedRackType = ucfirst(str_replace("_", " ", $rackType));
+
+                // Menampilkan header untuk tiap jenis rack
+                echo "<div class='rack-info'>";
+                echo "<h3>$formattedRackType</h3>";
+                echo "<p>Alamat: Lokasi 1</p>";
+                echo "<ul>";
+                
+                // Menampilkan item-item dalam rack
+                foreach ($items as $item) {
+                    echo "<li class='rack-item'>$item</li>";
+                }
+                
+                // Menutup ul dan div
+                echo "</ul>";
+                echo "</div>";
+            }
+            ?>
+        </section>
+
+        <!-- Run Wave Section -->
+        <section id="runwave">
+            <h2>Run Wave</h2>
+            <form>
+                <label for="wave_id">Wave ID:</label>
+                <input type="text" id="wave_id" name="wave_id" placeholder="Masukkan ID Wave">
+                <label for="rack">Rack:</label>
+                <select id="rack" name="rack">
+                    <option value="rack_regular">Rack Regular</option>
+                    <option value="rack_medicene">Rack Medicine</option>
+                    <option value="rack_electronic">Rack Electronic</option>
+                </select>
+                <label for="barcode">Barcode:</label>
+                <input type="text" id="barcode" name="barcode" placeholder="Scan Barcode untuk Run Wave">
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <!-- Inventory Section -->
+        <section id="inventory">
+            <h2>Inventory</h2>
+            <form>
+                <label for="barcode">Scan Barcode:</label>
+                <input type="text" id="barcode" name="barcode" placeholder="Scan Barcode untuk Cek Rak">
+                <label for="status">Status Item:</label>
+                <select id="status" name="status">
+                    <option value="picker">Proses Picker</option>
+                    <option value="loader">Proses Load</option>
+                    <option value="delivered">Terkirim</option>
+                </select>
+                <button type="submit">Cek Status</button>
+            </form>
+            <div id="inventory_status"></div>
+        </section>
+
+        <!-- Picker Section -->
+        <section id="picker">
+            <h2>Picker</h2>
+            <form>
+                <label for="user_id">ID Pengguna:</label>
+                <input type="text" id="user_id" name="user_id" placeholder="Masukkan ID Pengguna">
+                <label for="barcode">Barcode Item:</label>
+                <input type="text" id="barcode" name="barcode" placeholder="Scan Barcode Item untuk Picker">
+                <button type="submit">Picker</button>
+            </form>
+        </section>
+
+        <!-- Loader Section -->
+        <section id="loader">
+            <h2>Loader</h2>
+            <form>
+                <label for="user_id">ID Pengguna:</label>
+                <input type="text" id="user_id" name="user_id" placeholder="Masukkan ID Pengguna">
+                <label for="barcode">Barcode Loader:</label>
+                <input type="text" id="barcode" name="barcode" placeholder="Scan Barcode untuk Loader">
+                <button type="submit">Loader</button>
+            </form>
+        </section>
+
+        <!-- Receiver Section -->
+        <section id="receiver">
+            <h2>Receiver</h2>
+            <form>
+                <label for="user_id">ID Pengguna:</label>
+                <input type="text" id="user_id" name="user_id" placeholder="Masukkan ID Pengguna">
+                <label for="barcode">Barcode Receiver:</label>
+                <input type="text" id="barcode" name="barcode" placeholder="Scan Barcode untuk Receiver">
+                <button type="submit">Receiver</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 WMS by Andy</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Menghapus kelas 'active' dari semua section
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Menambahkan kelas 'active' pada section yang dipilih
+            const activeSection = document.getElementById(sectionId);
+            activeSection.classList.add('active');
+        }
+
+        // Fungsi untuk menampilkan status inventory
+        function showInventoryStatus(status) {
+            const statusText = {
+                picker: 'Item sedang diproses oleh picker.',
+                loader: 'Item sedang dalam proses load.',
+                delivered: 'Item telah terkirim.'
+            };
+            const statusDiv = document.getElementById('inventory_status');
+            statusDiv.innerHTML = statusText[status] || 'Status tidak ditemukan.';
+        }
+
+        // Event listener untuk formulir inventory
+        const inventoryForm = document.querySelector('#inventory form');
+        inventoryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const status = document.querySelector('#status').value;
+            showInventoryStatus(status);
+        });
+    </script>
+</body>
+</html>
